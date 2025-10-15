@@ -23,9 +23,9 @@
     "scripts": {
         "test:run": "codecept run",
         "test:coverage": "XDEBUG_MODE=coverage codecept run --coverage",
-        "cs:fix": "php-cs-fixer --config=.php-cs-fixer.php fix --diff --ansi --allow-risky=yes",
+        "cs:fix": "./vendor/bin/php-cs-fixer --config=.php-cs-fixer.php fix --diff --ansi --allow-risky=yes",
         "cs:check": "@cs:fix --dry-run",
-        "rector:fix": "rector process --config=.rector-fixer.php --clear-cache",
+        "rector:fix": "./vendor/bin/rector process --config=.rector-fixer.php --clear-cache",
         "rector:check": "@rector:fix --dry-run",
         "check": [
             "@cs:check",
