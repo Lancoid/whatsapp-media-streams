@@ -23,7 +23,7 @@ $paths = [
 
 $skippedRules = [
     /* PATHS */
-    __DIR__ . '/../../tests/_support/_generated',
+    __DIR__ . '/tests/_support/_generated',
     /* RULES */
     BooleanInBooleanNotRuleFixerRector::class,
     CatchExceptionNameMatchingTypeRector::class,
