@@ -1,0 +1,9 @@
+actor: UnitTester
+
+suite_namespace: Tests\unit
+
+path: unit
+
+modules:
+  enabled:
+    - Asserts

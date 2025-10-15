@@ -1,0 +1,46 @@
+{
+    "name": "lancoid/whatsapp-media-streams",
+    "description": "PSR-7 stream decorators for WhatsApp media encryption and decryption (Image/Video/Audio).",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.4",
+        "psr/http-message": "^1.0 || ^2.0",
+        "ext-openssl": "*"
+    },
+    "require-dev": {
+        "codeception/codeception": "^5.0",
+        "codeception/module-asserts": "^3.0",
+        "friendsofphp/php-cs-fixer": "^3.88",
+        "rector/rector": "^2.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lancoid\\WhatsApp\\MediaStreams\\": "src/",
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test:run": "codecept run",
+        "test:coverage": "XDEBUG_MODE=coverage codecept run --coverage",
+        "cs:fix": "php-cs-fixer --config=.php-cs-fixer.php fix --diff --ansi --allow-risky=yes",
+        "cs:check": "@cs:fix --dry-run",
+        "rector:fix": "rector process --config=.rector-fixer.php --clear-cache",
+        "rector:check": "@rector:fix --dry-run",
+        "check": [
+            "@cs:check",
+            "@rector:check",
+            "@test:run"
+        ],
+        "fix": [
+            "@cs:fix",
+            "@rector:fix",
+            "@test:coverage"
+        ]
+    },
+    "config": {
+        "process-timeout": 1800,
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}

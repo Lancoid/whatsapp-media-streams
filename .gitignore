@@ -1,0 +1,33 @@
+# Phpstorm project files
+.idea
+
+# Netbeans project files
+nbproject
+
+# Zend studio for eclipse project files
+.buildpath
+.project
+.settings
+
+# Windows thumbnail cache
+Thumbs.db
+
+# Composer
+composer.lock
+composer.phar
+/vendor
+
+# Mac DS_Store Files
+.DS_Store
+
+# Php-cs fixer
+.php-cs-fixer.cache
+.php-cs-fixer.php
+
+# Rector fixer
+.rector-fixer.php
+/.rector-fixer
+
+# Autotest dir
+tests/_output/*
+tests/_support/_generated
