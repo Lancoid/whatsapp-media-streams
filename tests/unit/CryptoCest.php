@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\unit;
 
+use GuzzleHttp\Psr7\Utils;
 use InvalidArgumentException;
 use Lancoid\WhatsApp\MediaStreams\Crypto;
 use Lancoid\WhatsApp\MediaStreams\MediaType;
-use Lancoid\WhatsApp\MediaStreams\Stream\BufferStream;
 use Lancoid\WhatsApp\MediaStreams\Stream\DecryptingStream;
 use Lancoid\WhatsApp\MediaStreams\Stream\EncryptingStream;
 use PHPUnit\Framework\Assert;
@@ -85,11 +85,11 @@ final class CryptoCest
         $mediaKey = random_bytes(32);
         $plaintext = random_bytes(777);
 
-        $bufferStream = new BufferStream($plaintext);
+        $bufferStream = Utils::streamFor($plaintext);
         $encryptingStream = new EncryptingStream($bufferStream, $mediaKey, MediaType::IMAGE);
 
         $ciphertext = (string)$encryptingStream;
-        $decryptingStream = new DecryptingStream(new BufferStream($ciphertext), $mediaKey, MediaType::IMAGE);
+        $decryptingStream = new DecryptingStream(Utils::streamFor($ciphertext), $mediaKey, MediaType::IMAGE);
 
         $decryptedContent = (string)$decryptingStream;
         Assert::assertSame($plaintext, $decryptedContent);

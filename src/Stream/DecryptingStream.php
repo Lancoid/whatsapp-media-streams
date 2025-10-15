@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Lancoid\WhatsApp\MediaStreams\Stream;
 
+use GuzzleHttp\Psr7\Utils;
 use InvalidArgumentException;
 use Lancoid\WhatsApp\MediaStreams\Crypto;
 use Psr\Http\Message\StreamInterface;
@@ -42,9 +43,8 @@ final class DecryptingStream extends AbstractCryptoStream
      */
     public function __construct(StreamInterface $sourceStream, string $mediaKey, string $mediaType)
     {
-        $encryptedData = (string)$sourceStream;
-        $plaintextData = Crypto::decrypt($encryptedData, $mediaKey, $mediaType);
-
-        $this->buffer = new BufferStream($plaintextData);
+        $this->buffer = Utils::streamFor(
+            Crypto::decrypt((string)$sourceStream, $mediaKey, $mediaType)
+        );
     }
 }

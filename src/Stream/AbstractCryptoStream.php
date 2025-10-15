@@ -12,7 +12,7 @@ use RuntimeException;
  *
  * This class provides a common implementation of PSR-7 StreamInterface
  * for read-only streams that delegate all operations to an internal
- * BufferStream. It eliminates code duplication between EncryptingStream
+ * buffer stream. It eliminates code duplication between EncryptingStream
  * and DecryptingStream.
  *
  * All crypto streams:
@@ -27,7 +27,7 @@ abstract class AbstractCryptoStream implements StreamInterface
      *
      * Child classes must initialize this in their constructor.
      */
-    protected BufferStream $buffer;
+    protected StreamInterface $buffer;
 
     public function __toString(): string
     {
