@@ -1,6 +1,7 @@
 # WhatsApp Media Streams
 
 [![CI](https://github.com/Lancoid/whatsapp-media-streams/workflows/CI/badge.svg)](https://github.com/Lancoid/whatsapp-media-streams/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/Lancoid/whatsapp-media-streams/branch/main/graph/badge.svg)](https://codecov.io/gh/Lancoid/whatsapp-media-streams)
 
 PSR-7 friendly helpers for encrypting and decrypting WhatsApp media payloads (image/video/audio). 
 
