@@ -31,17 +31,17 @@ final class EncryptingStream extends AbstractCryptoStream
      *
      * The source stream is immediately read in full, encrypted, and stored in an internal buffer.
      *
-     * @param StreamInterface $stream Source stream containing plaintext
+     * @param StreamInterface $sourceStream Source stream containing plaintext
      * @param string $mediaKey 32-byte media key
-     * @param string $type Media type (IMAGE, VIDEO, or AUDIO)
+     * @param string $mediaType Media type (IMAGE, VIDEO, or AUDIO)
      *
      * @throws InvalidArgumentException If the media key or type is invalid
      * @throws RuntimeException If encryption fails
      */
-    public function __construct(StreamInterface $stream, string $mediaKey, string $type)
+    public function __construct(StreamInterface $sourceStream, string $mediaKey, string $mediaType)
     {
         $this->buffer = Utils::streamFor(
-            Crypto::encrypt((string)$stream, $mediaKey, $type)
+            Crypto::encrypt((string)$sourceStream, $mediaKey, $mediaType)
         );
     }
 }
