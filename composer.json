@@ -12,6 +12,7 @@
     "require-dev": {
         "codeception/codeception": "^5.0",
         "codeception/module-asserts": "^3.0",
+        "codeception/verify": "^3.3",
         "friendsofphp/php-cs-fixer": "^3.88",
         "rector/rector": "^2.2"
     },
