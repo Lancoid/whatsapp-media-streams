@@ -19,12 +19,10 @@ composer.phar
 # Mac DS_Store Files
 .DS_Store
 
-# Php-cs fixer
+# Php-cs fixer cache
 .php-cs-fixer.cache
-.php-cs-fixer.php
 
-# Rector fixer
-.rector-fixer.php
+# Rector fixer cache
 /.rector-fixer
 
 # Autotest dir
