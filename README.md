@@ -25,11 +25,11 @@ Install via Composer:
 ## Quick start
 
 ### 1) Encrypt/decrypt raw buffers
-Use the high-level helpers in Lancoid\WhatsApp\MediaStreams\Media\Crypto together with Lancoid\WhatsApp\MediaStreams\Media\MediaType constants.
+Use the high-level helpers in Lancoid\WhatsApp\MediaStreams\Crypto together with Lancoid\WhatsApp\MediaStreams\MediaType constants.
 
 ```php
-use Lancoid\WhatsApp\MediaStreams\Media\Crypto;
-use Lancoid\WhatsApp\MediaStreams\Media\MediaType;
+use Lancoid\WhatsApp\MediaStreams\Crypto;
+use Lancoid\WhatsApp\MediaStreams\MediaType;
 
 $mediaKey = random_bytes(32); // must be exactly 32 bytes
 $plaintext = "hello world";
@@ -43,34 +43,33 @@ assert($decrypted === $plaintext);
 ### 2) Streaming API (PSR-7 StreamInterface)
 This package ships with small utility streams so you can plug into existing PSR-7 code.
 
-- BufferStream: an in-memory, read-only stream over a string
-- EncryptingStream: reads plaintext from a source stream, exposes encrypted bytes
-- DecryptingStream: reads encrypted bytes from a source stream, exposes plaintext
+- EncryptingStream: reads plaintext from a source PSR-7 stream, exposes encrypted bytes
+- DecryptingStream: reads encrypted bytes from a source PSR-7 stream, exposes plaintext
 
 ```php
-use Lancoid\WhatsApp\MediaStreams\Media\MediaType;
-use Lancoid\WhatsApp\MediaStreams\Media\Stream\BufferStream;
-use Lancoid\WhatsApp\MediaStreams\Media\Stream\EncryptingStream;
-use Lancoid\WhatsApp\MediaStreams\Media\Stream\DecryptingStream;
+use GuzzleHttp\Psr7\Utils;
+use Lancoid\WhatsApp\MediaStreams\MediaType;
+use Lancoid\WhatsApp\MediaStreams\Stream\EncryptingStream;
+use Lancoid\WhatsApp\MediaStreams\Stream\DecryptingStream;
 
 $mediaKey = random_bytes(32);
 
-// You can adapt any PSR-7 stream here. For demo, we use the provided BufferStream.
-$source = new BufferStream("Sensitive content");
+// You can adapt any PSR-7 stream here. For demo, we use Guzzle's Utils::streamFor()
+$source = Utils::streamFor("Sensitive content");
 
 $encryptedStream = new EncryptingStream($source, $mediaKey, MediaType::VIDEO);
-$encryptedBytes = (string) $encryptedStream;           // or $encryptedStream->getContents();
+$encryptedBytes = (string)$encryptedStream;           // or $encryptedStream->getContents();
 
-$decryptedStream = new DecryptingStream(new BufferStream($encryptedBytes), $mediaKey, MediaType::VIDEO);
-$plaintextBytes = (string) $decryptedStream;
+$decryptedStream = new DecryptingStream(Utils::streamFor($encryptedBytes), $mediaKey, MediaType::VIDEO);
+$plaintextBytes = (string)$decryptedStream;
 ```
 
 ### 3) Deriving keys only
 If you need the derived materials (iv, cipherKey, macKey, refKey):
 
 ```php
-use Lancoid\WhatsApp\MediaStreams\Media\Crypto;
-use Lancoid\WhatsApp\MediaStreams\Media\MediaType;
+use Lancoid\WhatsApp\MediaStreams\Crypto;
+use Lancoid\WhatsApp\MediaStreams\MediaType;
 
 $keys = Crypto::deriveKeys($mediaKey, MediaType::AUDIO);
 // $keys = ['iv' => ..., 'cipherKey' => ..., 'macKey' => ..., 'refKey' => ...]
@@ -79,9 +78,9 @@ $keys = Crypto::deriveKeys($mediaKey, MediaType::AUDIO);
 ## Media types
 Use one of the provided constants when encrypting/decrypting:
 ```php
-Lancoid\WhatsApp\MediaStreams\Media\MediaType::IMAGE
-Lancoid\WhatsApp\MediaStreams\Media\MediaType::VIDEO
-Lancoid\WhatsApp\MediaStreams\Media\MediaType::AUDIO
+Lancoid\WhatsApp\MediaStreams\MediaType::IMAGE
+Lancoid\WhatsApp\MediaStreams\MediaType::VIDEO
+Lancoid\WhatsApp\MediaStreams\MediaType::AUDIO
 ```
 
 Passing an unknown type will throw an InvalidArgumentException.
