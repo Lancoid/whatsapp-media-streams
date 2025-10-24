@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Lancoid\WhatsApp\MediaStreams;
 
-use InvalidArgumentException;
-
 /**
  * WhatsApp media type constants and utilities.
  *
@@ -21,41 +19,29 @@ final class MediaType
      *
      * Used for encrypting/decrypting image files (JPEG, PNG, etc.).
      */
-    public const string IMAGE = 'image';
+    public const IMAGE = 'IMAGE';
 
     /**
      * Video media type.
      *
      * Used for encrypting/decrypting video files (MP4, AVI, etc.).
      */
-    public const string VIDEO = 'video';
+    public const VIDEO = 'VIDEO';
 
     /**
      * Audio media type.
      *
      * Used for encrypting/decrypting audio files (MP3, OGG, AAC, etc.).
      */
-    public const string AUDIO = 'audio';
+    public const AUDIO = 'AUDIO';
 
     /**
-     * Get the HKDF info string for a media type.
+     * Document media type.
      *
-     * WhatsApp uses different info strings in the HKDF key derivation for each media type.
-     * This ensures that keys derived for one type cannot be used for another type.
+     * Used for encrypting/decrypting document files (PDF, DOCX, XLSX, etc.).
+     * This type is required for WhatsApp's document media encryption scheme.
      *
-     * @param string $type One of MediaType::IMAGE, MediaType::VIDEO, or MediaType::AUDIO
-     *
-     * @return string The HKDF info string for key derivation
-     *
-     * @throws InvalidArgumentException If the media type is unknown
+     * @see Crypto::deriveKeys() for usage in key derivation
      */
-    public static function getInfoString(string $type): string
-    {
-        return match ($type) {
-            self::IMAGE => 'WhatsApp Image Keys',
-            self::VIDEO => 'WhatsApp Video Keys',
-            self::AUDIO => 'WhatsApp Audio Keys',
-            default => throw new InvalidArgumentException('Unknown media type: ' . $type),
-        };
-    }
+    public const DOCUMENT = 'DOCUMENT';
 }
