@@ -12,7 +12,7 @@ This library provides:
 It is dependency-light and designed for integration into HTTP or storage workflows.
 
 ## Requirements
-- PHP >= 8.1
+- PHP >= 8.4
 - psr/http-message ^1.0 || ^2.0
 
 ## Installation
