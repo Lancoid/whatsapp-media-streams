@@ -40,8 +40,6 @@ final class MediaType
      *
      * Used for encrypting/decrypting document files (PDF, DOCX, XLSX, etc.).
      * This type is required for WhatsApp's document media encryption scheme.
-     *
-     * @see Crypto::deriveKeys() for usage in key derivation
      */
     public const DOCUMENT = 'DOCUMENT';
 }

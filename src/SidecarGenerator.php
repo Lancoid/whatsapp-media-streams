@@ -20,35 +20,37 @@ final class SidecarGenerator
     /**
      * Generates a sidecar string for a given encrypted media stream.
      *
-     * @param StreamInterface $encryptedStream the encrypted media stream (must be seekable)
-     * @param string $mediaKey 32-byte WhatsApp media key
-     * @param string $type media type (IMAGE, VIDEO, AUDIO, DOCUMENT)
+     * @param StreamInterface $encryptedStream Encrypted, seekable media stream
+     * @param string $key 32-byte WhatsApp media key
+     * @param string $mediaType Media type (IMAGE, VIDEO, AUDIO, DOCUMENT)
      *
-     * @return string concatenated 10-byte MACs for each 64 KiB chunk of the stream
+     * @return string Concatenated 10-byte MACs for each 64 KiB chunk of the stream
      *
-     * @throws RuntimeException if the stream is not seekable or reading fails
+     * @throws RuntimeException If the stream is not seekable or reading fails
      */
-    public static function generate(StreamInterface $encryptedStream, string $mediaKey, string $type): string
+    public static function generate(StreamInterface $encryptedStream, string $key, string $mediaType): string
     {
-        $keys = Crypto::deriveKeys($mediaKey, $type);
+        $keys = Crypto::deriveKeys($key, $mediaType);
         $macKey = $keys['macKey'];
-        $iv = $keys['iv'];
-        $sidecar = '';
-        $chunkSize = 64 * 1024 + 16;
-        $offset = 0;
+        $initializationVector = $keys['iv'];
+        $sidecarData = '';
+        $encryptedChunkSize = 64 * 1024 + 16;
+        $encryptedOffset = 0;
 
         $encryptedStream->rewind();
         while (!$encryptedStream->eof()) {
-            $encryptedStream->seek($offset);
-            $chunk = $encryptedStream->read($chunkSize);
-            if ('' === $chunk || false === $chunk) {
+            $encryptedStream->seek($encryptedOffset);
+            $encryptedChunk = $encryptedStream->read($encryptedChunkSize);
+
+            if ('' === $encryptedChunk || false === $encryptedChunk) {
                 break;
             }
-            $mac = substr(hash_hmac('sha256', $iv . $chunk, $macKey, true), 0, 10);
-            $sidecar .= $mac;
-            $offset += 64 * 1024;
+
+            $macTag = substr(hash_hmac('sha256', $initializationVector . $encryptedChunk, $macKey, true), 0, 10);
+            $sidecarData .= $macTag;
+            $encryptedOffset += 64 * 1024;
         }
 
-        return $sidecar;
+        return $sidecarData;
     }
 }

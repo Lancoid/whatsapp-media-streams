@@ -3,16 +3,16 @@
 [![CI](https://github.com/Lancoid/whatsapp-media-streams/workflows/CI/badge.svg)](https://github.com/Lancoid/whatsapp-media-streams/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/Lancoid/whatsapp-media-streams/branch/main/graph/badge.svg)](https://codecov.io/gh/Lancoid/whatsapp-media-streams)
 
-PSR-7 friendly helpers for encrypting and decrypting WhatsApp media payloads (image/video/audio). 
+PSR-7 friendly helpers for encrypting and decrypting WhatsApp media payloads (image/video/audio/document).
 
 This library provides:
-- Low-level crypto primitives that implement WhatsApp’s HKDF and AES-256-CBC + HMAC scheme.
-- Simple in-memory streams (PSR-7 StreamInterface) to wrap existing streams and read encrypted/decrypted bytes.
+- Low-level crypto primitives implementing WhatsApp’s HKDF and AES-256-CBC + HMAC scheme.
+- Lightweight PSR-7 stream wrappers for on-the-fly encryption and decryption of large media files.
 
-It’s small, dependency-light, and designed to be embedded into bigger HTTP or storage workflows.
+It is dependency-light and designed for integration into HTTP or storage workflows.
 
 ## Requirements
-- PHP >= 8.4
+- PHP >= 8.1
 - psr/http-message ^1.0 || ^2.0
 
 ## Installation
@@ -24,8 +24,8 @@ Install via Composer:
 
 ## Quick start
 
-### 1) Encrypt/decrypt raw buffers
-Use the high-level helpers in Lancoid\WhatsApp\MediaStreams\Crypto together with Lancoid\WhatsApp\MediaStreams\MediaType constants.
+### 1) Encrypt/Decrypt Buffers
+Use the helpers in Lancoid\WhatsApp\MediaStreams\Crypto with Lancoid\WhatsApp\MediaStreams\MediaType constants.
 
 ```php
 use Lancoid\WhatsApp\MediaStreams\Crypto;
@@ -41,7 +41,7 @@ assert($decrypted === $plaintext);
 ```
 
 ### 2) Streaming API (PSR-7 StreamInterface)
-This package ships with small utility streams so you can plug into existing PSR-7 code.
+This package provides utility streams for seamless integration with PSR-7 code.
 
 - EncryptingStream: reads plaintext from a source PSR-7 stream, exposes encrypted bytes
 - DecryptingStream: reads encrypted bytes from a source PSR-7 stream, exposes plaintext
@@ -49,8 +49,8 @@ This package ships with small utility streams so you can plug into existing PSR-
 ```php
 use GuzzleHttp\Psr7\Utils;
 use Lancoid\WhatsApp\MediaStreams\MediaType;
-use Lancoid\WhatsApp\MediaStreams\Stream\EncryptingStream;
-use Lancoid\WhatsApp\MediaStreams\Stream\DecryptingStream;
+use Lancoid\WhatsApp\MediaStreams\EncryptingStream;
+use Lancoid\WhatsApp\MediaStreams\DecryptingStream;
 
 $mediaKey = random_bytes(32);
 
@@ -64,7 +64,7 @@ $decryptedStream = new DecryptingStream(Utils::streamFor($encryptedBytes), $medi
 $plaintextBytes = (string)$decryptedStream;
 ```
 
-### 3) Deriving keys only
+### 3) Key Derivation
 If you need the derived materials (iv, cipherKey, macKey, refKey):
 
 ```php
@@ -81,6 +81,7 @@ Use one of the provided constants when encrypting/decrypting:
 Lancoid\WhatsApp\MediaStreams\MediaType::IMAGE
 Lancoid\WhatsApp\MediaStreams\MediaType::VIDEO
 Lancoid\WhatsApp\MediaStreams\MediaType::AUDIO
+Lancoid\WhatsApp\MediaStreams\MediaType::DOCUMENT
 ```
 
 Passing an unknown type will throw an InvalidArgumentException.
